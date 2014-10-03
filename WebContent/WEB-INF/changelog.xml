@@ -1,0 +1,54 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+
+	
+	<changeSet id="2" author="bore">
+		<createTable tableName="users">
+
+			<column name="USER_ID" type="int(11)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="USERNAME" type="varchar(255)" />
+			<column name="PASSWORD" type="varchar(255)" />
+			<column name="ENABLED" type="smallint(6)" defaultValue="0">
+				<constraints nullable="false" />
+			</column>
+
+		</createTable>
+		<addAutoIncrement tableName="users" columnName="USER_ID"
+			columnDataType="int" />
+
+	</changeSet>
+	<changeSet id="3" author="bore">
+		<createTable tableName="user_roles">
+
+			<column name="USER_ROLE_ID" type="int(11)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="USER_ID" type="int(11)" />
+			<column name="AUTHORITY" type="varchar(255)" />
+   		</createTable>
+		<addAutoIncrement tableName="user_roles" columnName="USER_ROLE_ID"
+			columnDataType="int" />
+		<addForeignKeyConstraint constraintName="FK_user_roles"
+			baseTableName="user_roles" baseColumnNames="USER_ID"
+			referencedTableName="users" referencedColumnNames="USER_ID" />
+	</changeSet>
+	<changeSet id="03" author="nbore">
+		<createTable tableName="songs">
+
+			<column name="id" type="int(11)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="title" type="varchar(255)" />
+			<column name="song" type="text" />
+			<column name="audio" type="varchar(255)" />
+			<column name="video" type="varchar(255)" />
+		</createTable>
+		<addAutoIncrement tableName="songs" columnName="id"
+			columnDataType="int" />
+	</changeSet>
+</databaseChangeLog>
