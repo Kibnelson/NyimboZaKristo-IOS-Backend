@@ -37,15 +37,14 @@ public class SongsController {
 	public void create(HttpServletRequest request, HttpServletResponse response) {
 		String title = request.getParameter("title");//
 		String songLyrics = request.getParameter("song");//
-		String audio = request.getParameter("audio");
-		String video = request.getParameter("video");
+	
 		String id = request.getParameter("id");
 		if (!id.isEmpty()) {
 			Songs song = songsDAO.getById(Integer.parseInt(id));
 			song.setTitle(title);
 			song.setSong(songLyrics);
-			song.setAudio(audio);
-			song.setVideo(video);
+			song.setAudio("http://www.chiptape.com/chiptape/sounds/long/_sweet.mp3");
+			song.setVideo("http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8");
 			songsDAO.updateSong(song);
 		} else {
 			Songs songs = songsDAO.getSongsBySongTitle(title);
@@ -60,8 +59,9 @@ public class SongsController {
 				Songs song = new Songs();
 				song.setTitle(title);
 				song.setSong(songLyrics);
-				song.setAudio(audio);
-				song.setVideo(video);
+				song.setAudio("http://www.chiptape.com/chiptape/sounds/long/_sweet.mp3");
+				song.setVideo("http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8");
+				
 				songsDAO.saveSongs(song);
 			}
 		}
@@ -83,7 +83,10 @@ public class SongsController {
 						songsList = songsDAO.searchSongsNumber(Integer
 								.parseInt(sSearch));
 					} else {
-						songsList = songsDAO.searchSongsByTitle(sSearch);
+						if(sSearch.equalsIgnoreCase("All"))
+							songsList = songsDAO.getAllSongs();	
+						else
+							songsList = songsDAO.searchSongsByTitle(sSearch);
 					}
 					for (int i = 0; i < songsList.size(); i++) {
 						jsonPayload.put(getMobileSearchPayload(songsList, i));
@@ -144,8 +147,8 @@ public class SongsController {
 		songsPayload.put(songs.get(size).getId());
 		songsPayload.put(songs.get(size).getTitle());
 		songsPayload.put(songs.get(size).getSong());
-		songsPayload.put(songs.get(size).getAudio());
-		songsPayload.put(songs.get(size).getVideo());
+		songsPayload.put("<a href='"+songs.get(size).getAudio()+"'>"+songs.get(size).getAudio()+"</a>");
+		songsPayload.put("<a href='"+songs.get(size).getVideo()+"'>"+songs.get(size).getVideo()+"</a>");
 		songsPayload.put("");
 		return songsPayload;
 	}
@@ -155,11 +158,11 @@ public class SongsController {
 
 		songsMobilePayload = new JSONObject();
 		try {
-			songsMobilePayload.put("no", songs.get(size).getId());
-			songsMobilePayload.put("title", songs.get(size).getTitle());
-			songsMobilePayload.put("song", songs.get(size).getSong());
-			songsMobilePayload.put("audio", songs.get(size).getAudio());
-			songsMobilePayload.put("video", songs.get(size).getVideo());
+			songsMobilePayload.put("No", ""+songs.get(size).getId());
+			songsMobilePayload.put("Title", songs.get(size).getTitle());
+			songsMobilePayload.put("Song", songs.get(size).getSong());
+			songsMobilePayload.put("Audio", songs.get(size).getAudio());
+			songsMobilePayload.put("Video", songs.get(size).getVideo());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
